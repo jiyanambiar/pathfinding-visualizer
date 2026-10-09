@@ -74,6 +74,7 @@ class App:
 
     def __init__(self, root, rows=25, cols=40):
         self.root = root
+        root.withdraw()  # stay hidden until centered; see _show_centered
         self.grid = Grid(rows, cols)
 
         self._search = None          # active search generator, or None
@@ -86,6 +87,7 @@ class App:
         self._last_pos = None        # last cell painted during a drag
         self._w_held = False
         self._w_release_id = None
+        self._compare_win = None
 
         root.title("Pathfinding Visualizer")
         root.resizable(False, False)
@@ -93,6 +95,7 @@ class App:
         self._bind_events()
         self.redraw_all()
         self._set_status("Ready. Draw walls, pick an algorithm and press Run.")
+        self._show_centered(root)
 
     # ================================================================== layout
 
@@ -458,7 +461,11 @@ class App:
         self._set_status("Compared {} algorithms on the current grid.".format(len(rows)))
 
     def _show_compare_window(self, rows, best_cost):
+        if self._compare_win is not None and self._compare_win.winfo_exists():
+            self._compare_win.destroy()  # keep a single, up-to-date table
         win = tk.Toplevel(self.root)
+        win.withdraw()  # stay hidden until centered; see _show_centered
+        self._compare_win = win
         win.title("Algorithm comparison")
         win.transient(self.root)
         columns = ("algorithm", "expanded", "length", "cost", "optimal", "time")
@@ -484,6 +491,29 @@ class App:
             foreground="#52525b",
         ).pack(padx=10)
         ttk.Button(win, text="Close", command=win.destroy).pack(pady=(5, 10))
+        self._show_centered(win, over=self.root)
+
+    def _show_centered(self, win, over=None):
+        """Center a withdrawn ``win`` over ``over`` (or the screen), then show it.
+
+        Tk opens new windows at (0, 0), where a desktop panel can cover the
+        top of the window (e.g. the compare table's header). Some window
+        managers, such as Hyprland, ignore a position set before the window
+        is first shown, so the window must be withdrawn while it is placed.
+        """
+        win.update_idletasks()
+        width, height = win.winfo_reqwidth(), win.winfo_reqheight()
+        if over is None:
+            x = (win.winfo_screenwidth() - width) // 2
+            y = (win.winfo_screenheight() - height) // 2
+        else:
+            x = over.winfo_rootx() + (over.winfo_width() - width) // 2
+            y = over.winfo_rooty() + (over.winfo_height() - height) // 2
+        x = max(0, min(x, win.winfo_screenwidth() - width))
+        y = max(0, min(y, win.winfo_screenheight() - height))
+        win.minsize(width, height)
+        win.geometry("{}x{}+{}+{}".format(width, height, x, y))
+        win.deiconify()
 
     def save(self):
         path = filedialog.asksaveasfilename(
