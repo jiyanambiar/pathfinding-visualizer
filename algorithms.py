@@ -227,7 +227,6 @@ ALGORITHMS = {
     "A*": astar,
 }
 
-
 def run_to_completion(algorithm, grid):
     """Exhaust a search generator without animation and time it.
 
