@@ -127,6 +127,15 @@ so the heuristic never overestimates and A* stays optimal on weighted grids.
 
 Positions are `[row, col]`; weights are `[row, col, weight]`.
 
+## Tests
+
+The grid model and the algorithms have no tkinter dependency, so they are tested
+headless with the standard library:
+
+```bash
+python -m unittest
+```
+
 ## Project structure
 
 ```
@@ -134,4 +143,5 @@ main.py        entry point
 grid.py        Grid and Node classes, maze generation, JSON save/load
 algorithms.py  BFS, DFS, Dijkstra and A* as step-by-step generators
 gui.py         tkinter App: canvas, controls, stats, legend, compare table
+tests/         unittest suite for grid.py and algorithms.py
 ```
