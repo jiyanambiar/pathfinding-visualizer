@@ -242,7 +242,10 @@ class Grid:
             if start in walls or end in walls:
                 raise ValueError("start or end is a wall")
             weights = {}
-            for r, c, w in data["weights"]:
+            for entry in data["weights"]:
+                if not isinstance(entry, list) or len(entry) != 3:
+                    raise ValueError("weight entry {!r} is not [row, col, weight]".format(entry))
+                r, c, w = entry
                 pos = self._parse_pos([r, c])
                 if not isinstance(w, int) or isinstance(w, bool) or w < 1:
                     raise ValueError("invalid weight {!r} at {}".format(w, pos))
@@ -263,8 +266,12 @@ class Grid:
         self.set_end(*end)
 
     def _parse_pos(self, value):
+        if not isinstance(value, list) or len(value) != 2:
+            raise ValueError("cell {!r} is not [row, col]".format(value))
         r, c = value
-        if not (isinstance(r, int) and isinstance(c, int)) or not self.in_bounds(r, c):
+        if (not (isinstance(r, int) and isinstance(c, int))
+                or isinstance(r, bool) or isinstance(c, bool)
+                or not self.in_bounds(r, c)):
             raise ValueError("cell {!r} is out of bounds".format(value))
         return (r, c)
 

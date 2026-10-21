@@ -448,6 +448,7 @@ class App:
         self.grid.generate_maze()
         self.redraw_all()
         self._has_overlay = False
+        self._show_stats(None)
         self._set_status("Generated a maze with recursive backtracking.")
 
     def compare(self):
@@ -542,4 +543,5 @@ class App:
             return
         self.redraw_all()
         self._has_overlay = False
+        self._show_stats(None)
         self._set_status("Loaded grid from {}.".format(path))
