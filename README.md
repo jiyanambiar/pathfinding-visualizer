@@ -145,3 +145,12 @@ algorithms.py  BFS, DFS, Dijkstra and A* as step-by-step generators
 gui.py         tkinter App: canvas, controls, stats, legend, compare table
 tests/         unittest suite for grid.py and algorithms.py
 ```
+## How to explore the algorithms
+
+1. Draw a few walls between the start and end nodes, then run BFS and Dijkstra. On an unweighted grid, both should find a shortest path, though they may explore different cells.
+2. Add weighted cells along the route and compare BFS with Dijkstra. BFS ignores entry costs, while Dijkstra considers them and may choose a longer route with a lower total cost.
+3. Run A* on the same grid as Dijkstra. Both find a minimum-cost path, but A* uses the Manhattan heuristic to guide its search toward the end.
+4. Try DFS to see how a search that does not guarantee the shortest path behaves.
+5. Use **Step** to inspect each expansion, or **Compare All** to review the algorithms’ results together.
+
+The exact cells explored can vary with neighbor ordering and tie-breaking. Compare path length and path cost to see how each algorithm’s rules affect the result.
