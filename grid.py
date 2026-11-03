@@ -7,7 +7,7 @@ algorithms and the save/load code can run (and be tested) without a GUI.
 import json
 import random
 
-# Cell states. START/END/WALL/EMPTY describe the maze itself; VISITED,
+# Cell states. START/END/WALL/EMPTY describe the maze itself; VISITED, hi
 # FRONTIER and PATH are overlays painted by a search and removed by
 # Grid.clear_path().
 EMPTY = "empty"
